@@ -3,22 +3,21 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Ex3.GarageLogic.Components;
-using Ex3.GarageLogic.Enums;
-using Ex3.GarageLogic;
 
-namespace Ex3.GarageLogic.Vehicles
+namespace Ex03.GarageLogic
 {
-    class Vehicle
+    public class Vehicle
     {
-        private string m_ModelName;
-        private string m_LicensePlateNumber;
-        private float m_EnergyLeft;
+        protected string m_ModelName;
+        protected string m_LicensePlateNumber;
+        protected float m_EnergyLeft;
         private List<Wheel> m_VehicleWheels;
-        private Customer m_VehicleOwner;
-        private eVehicleStatus m_CarStatus;
-        private Engine m_Engine;
-
+        protected Customer m_VehicleOwner;
+        protected eVehicleStatus m_CarStatus;
+        protected Engine m_Engine;
+        public Vehicle()
+        {
+        }
         public List<Wheel> VehicleWheels
         {
             get

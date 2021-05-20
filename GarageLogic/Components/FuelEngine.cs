@@ -3,8 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Ex3.GarageLogic.Enums;
-namespace Ex3.GarageLogic.Components
+namespace Ex03.GarageLogic
 {
     public class FuelEngine : Engine
     {

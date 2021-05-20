@@ -3,17 +3,32 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Ex3.GarageLogic.Enums;
-using Ex3.GarageLogic.Components;
 
-namespace Ex3.GarageLogic.Vehicles
+namespace Ex03.GarageLogic
 {
-    class Car : Vehicle
+    internal class Car : Vehicle
     {
-        private eVehicleColor m_CarColor;
-        private eNumberOfDoors m_NumOfDoors;
-
-        public eVehicleColor CarColor
+        protected eVehicleColor m_CarColor;
+        protected eNumberOfDoors m_NumOfDoors;
+        public Car() : base() 
+        { 
+        }
+        protected enum eVehicleColor
+        {
+            Red,
+            Silver,
+            White,
+            Black
+        }
+        protected enum eNumberOfDoors
+        {
+            TwoDoors,
+            ThreeDoors,
+            FourDoors,
+            FiveDoors
+        }
+  
+        protected eVehicleColor CarColor
         {
             get
             {
@@ -25,7 +40,7 @@ namespace Ex3.GarageLogic.Vehicles
             }
         }
 
-        public eNumberOfDoors NumOfDoors
+        protected eNumberOfDoors NumOfDoors
         {
             get
             {
@@ -36,23 +51,23 @@ namespace Ex3.GarageLogic.Vehicles
                 m_NumOfDoors = value;
             }
         }
-        public Car(eVehicleColor i_VehicleColor, eNumberOfDoors i_NumOfDoors, ref VehicleForm i_NewVehicleForm)
-        {
-            SetWheels(i_NewVehicleForm.WheelManufacturer,i_NewVehicleForm.WheelsAirPressure, i_NewVehicleForm.MaxWheelAirPressure, i_NewVehicleForm.NumOfWheels);
-            VehicleOwner.OwnerName = i_NewVehicleForm.OwnerName;
-            VehicleOwner.OwnerPhone = i_NewVehicleForm.OwnerPhone;
-            EnergyLeft = i_NewVehicleForm.EnergyLeft;
-            CarStatus = eVehicleStatus.InRepair;
-            LicensePlateNumber = i_NewVehicleForm.LicensePlate;
-            ModelName = i_NewVehicleForm.ModelName;
-            if(i_NewVehicleForm.EnergyType == eEnergyType.Electricity)
-            {
-                Engine = new ElectricEngine(i_NewVehicleForm.MaxEnergy, i_NewVehicleForm.EnergyLeft);
-            }
-            if(i_NewVehicleForm.EnergyType == eEnergyType.Fuel)
-            {
-                Engine = new FuelEngine(i_NewVehicleForm.MaxEnergy, i_NewVehicleForm.EnergyLeft, i_NewVehicleForm.FuelType);
-            }
-        }
+        //public Car(eVehicleColor i_VehicleColor, eNumberOfDoors i_NumOfDoors, ref VehicleForm i_NewVehicleForm)
+        //{
+        //    SetWheels(i_NewVehicleForm.WheelManufacturer,i_NewVehicleForm.WheelsAirPressure, i_NewVehicleForm.MaxWheelAirPressure, i_NewVehicleForm.NumOfWheels);
+        //    VehicleOwner.OwnerName = i_NewVehicleForm.OwnerName;
+        //    VehicleOwner.OwnerPhone = i_NewVehicleForm.OwnerPhone;
+        //    EnergyLeft = i_NewVehicleForm.EnergyLeft;
+        //    CarStatus = eVehicleStatus.InRepair;
+        //    LicensePlateNumber = i_NewVehicleForm.LicensePlate;
+        //    ModelName = i_NewVehicleForm.ModelName;
+        //    if(i_NewVehicleForm.EnergyType == eEnergyType.Electricity)
+        //    {
+        //        Engine = new ElectricEngine(i_NewVehicleForm.MaxEnergy, i_NewVehicleForm.EnergyLeft);
+        //    }
+        //    if(i_NewVehicleForm.EnergyType == eEnergyType.Fuel)
+        //    {
+        //        Engine = new FuelEngine(i_NewVehicleForm.MaxEnergy, i_NewVehicleForm.EnergyLeft, i_NewVehicleForm.FuelType);
+        //    }
+        //}
     }
 }

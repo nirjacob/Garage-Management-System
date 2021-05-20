@@ -3,11 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Ex3.GarageLogic.Enums;
-using Ex3.GarageLogic;
-using Ex3.GarageLogic.Components;
 
-namespace Ex3.GarageLogic
+namespace Ex03.GarageLogic
 {
     public class VehicleForm
     {

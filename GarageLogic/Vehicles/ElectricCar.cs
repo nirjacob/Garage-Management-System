@@ -6,10 +6,10 @@ using System.Threading.Tasks;
 
 namespace Ex03.GarageLogic
 {
-    public enum eFuelType
+    class ElectricCar : Car
     {
-        Octan98,
-        Octan95,
-        Soler,
+        public ElectricCar(): base()
+        {
+        }
     }
 }

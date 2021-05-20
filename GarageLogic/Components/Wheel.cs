@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Ex3.GarageLogic.Components
+namespace Ex03.GarageLogic
 {
-    class Wheel
+    public class Wheel
     {
         private string m_ManufactureName;
         private float m_CurrentAirPressure;

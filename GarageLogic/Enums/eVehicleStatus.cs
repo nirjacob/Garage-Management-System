@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Ex3.GarageLogic.Enums
+namespace Ex03.GarageLogic
 {
     public enum eVehicleStatus
     {

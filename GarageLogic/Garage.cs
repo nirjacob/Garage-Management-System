@@ -1,18 +1,18 @@
 ﻿using System;
 using System.Collections.Generic;
-using Ex3.GarageLogic.Vehicles;
-using Ex3.GarageLogic.Enums;
 
-namespace Ex3.GarageLogic
+namespace Ex03.GarageLogic
 {
     public class Garage
     {
         Dictionary<string,Vehicle> m_VehiclesInGarage;
         VehicleForm m_NewVehicleForm;
+        VehicleFactory m_VehicleCreator;
         public Garage()
         {
             m_VehiclesInGarage = new Dictionary<string, Vehicle>();
             m_NewVehicleForm = new VehicleForm();
+            m_VehicleCreator = new VehicleFactory();
         }
         public VehicleForm NewVehicleForm
         {
@@ -23,6 +23,13 @@ namespace Ex3.GarageLogic
             set
             {
                 m_NewVehicleForm = value;
+            }
+        } 
+        public VehicleFactory VehicleCreator
+        {
+            get
+            {
+                return m_VehicleCreator;
             }
         }
         Dictionary<string, Vehicle> GarageVehicles
@@ -37,22 +44,33 @@ namespace Ex3.GarageLogic
 
             GarageVehicles[i_LicensePlate].InflateTireToMax();
         }
+
+        public List<string> GetSupportedVehicles()
+        {
+            List<string> supportedVehicles = new List<string>();
+            foreach (string vehicle in Enum.GetNames(typeof(VehicleFactory.eSupportedVehicles)))
+            {
+                supportedVehicles.Add(vehicle);
+            }
+            return supportedVehicles;
+        }
+
         
-        public void CreateNewMotorcycle(eLicenseType i_LicenseType, int i_EngineCapacity)
-        {
-            Vehicle toAdd = VehicleFactory.BuildNewMotorcycle(i_LicenseType, i_EngineCapacity, ref m_NewVehicleForm);
-            GarageVehicles.Add(NewVehicleForm.LicensePlate, toAdd);
-        }
-        public void CreateNewCar(eVehicleColor vehicleColor, eNumberOfDoors numOfDoors)
-        {
-            Vehicle toAdd = VehicleFactory.BuildNewCar(vehicleColor, numOfDoors,ref m_NewVehicleForm);
-            GarageVehicles.Add(NewVehicleForm.LicensePlate,toAdd);
-        }
-        public void CreateNewTruck(bool v_HazardousMaterial, float i_MaxCarryingWeight)
-        {
-            Vehicle toAdd = VehicleFactory.BuildNewTruck(v_HazardousMaterial, i_MaxCarryingWeight,ref m_NewVehicleForm);
-            GarageVehicles.Add(NewVehicleForm.LicensePlate, toAdd);
-        }
+        //public void CreateNewMotorcycle(eLicenseType i_LicenseType, int i_EngineCapacity)
+        //{
+        //    Vehicle toAdd = VehicleFactory.BuildNewMotorcycle(i_LicenseType, i_EngineCapacity, ref m_NewVehicleForm);
+        //    GarageVehicles.Add(NewVehicleForm.LicensePlate, toAdd);
+        //}
+        //public void CreateNewCar(eVehicleColor vehicleColor, eNumberOfDoors numOfDoors)
+        //{
+        //    Vehicle toAdd = VehicleFactory.BuildNewCar(vehicleColor, numOfDoors,ref m_NewVehicleForm);
+        //    GarageVehicles.Add(NewVehicleForm.LicensePlate,toAdd);
+        //}
+        //public void CreateNewTruck(bool v_HazardousMaterial, float i_MaxCarryingWeight)
+        //{
+        //    Vehicle toAdd = VehicleFactory.BuildNewTruck(v_HazardousMaterial, i_MaxCarryingWeight,ref m_NewVehicleForm);
+        //    GarageVehicles.Add(NewVehicleForm.LicensePlate, toAdd);
+        //}
         public bool AlreadyInGarage(string i_LicensePlate)
         {
             return GarageVehicles.ContainsKey(i_LicensePlate);

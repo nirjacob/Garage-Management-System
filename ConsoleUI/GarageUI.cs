@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Threading;
-using Ex3.GarageLogic;
-using Ex3.GarageLogic.Enums;
-using Ex3.GarageLogic.Vehicles;
+using Ex03.GarageLogic;
+using System.Reflection;
+
 
 namespace Ex03.ConsoleUI
 {
@@ -120,14 +120,45 @@ namespace Ex03.ConsoleUI
         public void InsertNewVehicle()
         {
             string licensePlate = getLicensePlate();
-
             if (GarageStorage.AlreadyInGarage(licensePlate))
             {
                 GarageStorage.setVehicleStatus(licensePlate, eVehicleStatus.InRepair);
             }
-            FillNewVehicleForm(licensePlate);
-            AddVehicleToGarage();
+            Console.WriteLine("Please select vehicle type: ");
+            List<string> supportedVehicles = GarageStorage.GetSupportedVehicles();
+
+            int choiseIndex = 1;
+            foreach (string supportedVehicle in supportedVehicles)
+            {
+                Console.WriteLine("{0}.{1}", choiseIndex, supportedVehicle);
+                choiseIndex++;
+            }
+            string vehicleChoise = Console.ReadLine();
+            //Check enum choice.
+            Vehicle newVehicle = GarageStorage.VehicleCreator.CreateVehicle(vehicleChoise);
+            getCarDetailes(newVehicle, licensePlate);
+
         }
+
+
+        //Type t = obj.GetType(); // Where obj is object whose properties you need.
+        //PropertyInfo [] pi = t.GetProperties();
+        //foreach (PropertyInfo p in pi)
+        //{
+        //    System.Console.WriteLine(p.Name + " : " + p.GetValue(obj));
+        //}
+
+        //public void InsertNewVehicle()
+        //{
+        //    string licensePlate = getLicensePlate();
+
+        //    if (GarageStorage.AlreadyInGarage(licensePlate))
+        //    {
+        //        GarageStorage.setVehicleStatus(licensePlate, eVehicleStatus.InRepair);
+        //    }
+        //    FillNewVehicleForm(licensePlate);
+        //    AddVehicleToGarage();
+        //}
         public void AddVehicleToGarage()
         {
             switch(GarageStorage.NewVehicleForm.VehicleType)
@@ -159,16 +190,16 @@ Please enter the door color:
 Please enter the door color:
 2, 3, 4 or 5
 ");
-            eVehicleColor vehicleColor = (eVehicleColor)getCarDetailes(colorMsg, 1, 4);
-            eNumberOfDoors numOfDoors = (eNumberOfDoors)getCarDetailes(numOfDoorsMsg, 2, 5);
+            //eVehicleColor vehicleColor = (eVehicleColor)getCarDetailes(colorMsg, 1, 4);
+            //eNumberOfDoors numOfDoors = (eNumberOfDoors)getCarDetailes(numOfDoorsMsg, 2, 5);
 
-            GarageStorage.CreateNewCar(vehicleColor, numOfDoors);
+            //GarageStorage.CreateNewCar(vehicleColor, numOfDoors);
         }
         private void addTruck()
         {
             bool hazardousMaterial = containsHazardousMaterials();
             float maxCarryingWeight = getmaxCarryingWeight();
-            GarageStorage.CreateNewTruck(hazardousMaterial, maxCarryingWeight);
+            //GarageStorage.CreateNewTruck(hazardousMaterial, maxCarryingWeight);
         }
         private float getmaxCarryingWeight()
         {
@@ -235,35 +266,89 @@ Please enter the door color:
         {
             eLicenseType licenseType = getLicenseType();
             int engineCapacity = getEngineCapacity();
-            GarageStorage.CreateNewMotorcycle(licenseType, engineCapacity);
+            //GarageStorage.CreateNewMotorcycle(licenseType, engineCapacity);
         }
-        private int getCarDetailes(string msg, int minVal, int maxVal)
+        private void getCarDetailes(Vehicle i_NewVehicle, string i_LicensePlate)
         {
-            bool isValidInput = false;
-            int userInput = 0;
-            Console.WriteLine(msg);
-            while (isValidInput == false)
+            Type vehicleType = i_NewVehicle.GetType();
+            FieldInfo[] fields = vehicleType.GetFields(BindingFlags.Instance| BindingFlags.NonPublic);
+            foreach(FieldInfo field in fields)
             {
-                isValidInput = true;
-                try
+                string fieldName = getFieldName(field.Name);
+                Console.WriteLine("Please enter {0} : ", fieldName);
+                //Console.WriteLine("Please enter {0} : ", field.Name);
+
+                Console.WriteLine(field.FieldType);
+                if (field.FieldType == typeof(Single))
                 {
-                    userInput = int.Parse(Console.ReadLine());
-                    checkValidity(2, 5, userInput);
+                    float valueFromUser = readIntFromUser();
+                    field.SetValue(i_NewVehicle, valueFromUser);
                 }
-                catch (ValueOutOfRangeException e)
+                if (field.FieldType.BaseType == typeof(Customer))
                 {
-                    Console.WriteLine(e.Message);
-                    isValidInput = false;
+                    Customer valueFromUser = readCustomerFromUser();
+                    field.SetValue(i_NewVehicle, valueFromUser);
                 }
-                catch (FormatException)
+                if (field.FieldType.BaseType == typeof(Engine))
                 {
-                    Console.WriteLine("{0} is not an integer", userInput);
-                    isValidInput = false;
+                    Engine valueFromUser = readEngineFromUser();
+                    field.SetValue(i_NewVehicle, valueFromUser);
+                }
+                if (field.FieldType.BaseType == (typeof(List<Wheel>)))
+                {
+                    List<Wheel> valueFromUser = readWheelsFromUser();
+                    field.SetValue(i_NewVehicle, valueFromUser);
+                }
+                if (field.FieldType.BaseType == typeof(Int32))
+                {
+                    int valueFromUser = readIntFromUser();
+                    field.SetValue(i_NewVehicle, valueFromUser);
+                }
+                else if (field.FieldType.IsEnum)
+                {
+                    int valueFromUser = readEnumFromUser();
+                    field.SetValue(i_NewVehicle, valueFromUser);
+                }
+                else if (field.FieldType == typeof(String))
+                {
+                    string valueFromUser = readStringFromUser();
+                    field.SetValue(i_NewVehicle, valueFromUser);
                 }
             }
-            return userInput;
         }
+        private string getFieldName(string i_FieldName)
+        {
+            string finalFieldName = i_FieldName;
+            bool foundUppercase = false;
+            finalFieldName = finalFieldName.Replace("m_", "");
+            for (int i = 1; i < finalFieldName.Length; i++)
+            {
+                if (Char.IsUpper(finalFieldName[i])&&foundUppercase==false)
+                {
+                    foundUppercase = true;
+                    finalFieldName = finalFieldName.Insert(i," ");
+                }
+                else
+                {
+                    foundUppercase = false;
+                }
+            }
+            finalFieldName = finalFieldName.ToLower();
+            return finalFieldName;
+        }
+        private Engine readEngineFromUser()
+        {
 
+        }
+        private Customer readCustomerFromUser()
+        {
+            
+        }
+        private float readIntFromUser()
+        {
+            float inputFromUser = float.Parse(Console.ReadLine());
+            return inputFromUser;
+        }
         private int getEngineCapacity()
         {
             Console.WriteLine("Please enter the engine capacity: ");
