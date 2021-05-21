@@ -5,34 +5,21 @@ namespace Ex03.GarageLogic
 {
     public class Garage
     {
-        Dictionary<string,Vehicle> m_VehiclesInGarage;
-        VehicleForm m_NewVehicleForm;
-        VehicleFactory m_VehicleCreator;
+        private Dictionary<string,Vehicle> m_VehiclesInGarage;
+        private VehicleFactory m_VehicleCreator;
         public Garage()
         {
             m_VehiclesInGarage = new Dictionary<string, Vehicle>();
-            m_NewVehicleForm = new VehicleForm();
             m_VehicleCreator = new VehicleFactory();
         }
-        public VehicleForm NewVehicleForm
-        {
-            get
-            {
-                return m_NewVehicleForm;
-            }
-            set
-            {
-                m_NewVehicleForm = value;
-            }
-        } 
-        public VehicleFactory VehicleCreator
+        private VehicleFactory VehicleCreator
         {
             get
             {
                 return m_VehicleCreator;
             }
         }
-        Dictionary<string, Vehicle> GarageVehicles
+        public Dictionary<string, Vehicle> GarageVehicles
         {
             get
             {
@@ -41,10 +28,13 @@ namespace Ex03.GarageLogic
         }
         public void InflateToMax(string i_LicensePlate)
         {
-
             GarageVehicles[i_LicensePlate].InflateTireToMax();
+            GarageVehicles[i_LicensePlate].CurrentWheelsAirPressure = GarageVehicles[i_LicensePlate].ManufactureMaxWheelAirPressure();
         }
-
+        public Vehicle CreateNewVehicle(string i_VehicleChoise)
+        {
+            return VehicleCreator.CreateVehicle(i_VehicleChoise);
+        }
         public List<string> GetSupportedVehicles()
         {
             List<string> supportedVehicles = new List<string>();
@@ -54,31 +44,27 @@ namespace Ex03.GarageLogic
             }
             return supportedVehicles;
         }
-
-        
-        //public void CreateNewMotorcycle(eLicenseType i_LicenseType, int i_EngineCapacity)
-        //{
-        //    Vehicle toAdd = VehicleFactory.BuildNewMotorcycle(i_LicenseType, i_EngineCapacity, ref m_NewVehicleForm);
-        //    GarageVehicles.Add(NewVehicleForm.LicensePlate, toAdd);
-        //}
-        //public void CreateNewCar(eVehicleColor vehicleColor, eNumberOfDoors numOfDoors)
-        //{
-        //    Vehicle toAdd = VehicleFactory.BuildNewCar(vehicleColor, numOfDoors,ref m_NewVehicleForm);
-        //    GarageVehicles.Add(NewVehicleForm.LicensePlate,toAdd);
-        //}
-        //public void CreateNewTruck(bool v_HazardousMaterial, float i_MaxCarryingWeight)
-        //{
-        //    Vehicle toAdd = VehicleFactory.BuildNewTruck(v_HazardousMaterial, i_MaxCarryingWeight,ref m_NewVehicleForm);
-        //    GarageVehicles.Add(NewVehicleForm.LicensePlate, toAdd);
-        //}
-        public bool AlreadyInGarage(string i_LicensePlate)
+        public void InsertToStorage(string i_LicencePlate, ref Vehicle i_VehicleToAdd)
+        {
+            m_VehiclesInGarage.Add(i_LicencePlate, i_VehicleToAdd);
+        }
+        public bool VehicleAlreadyInGarage(string i_LicensePlate)
         {
             return GarageVehicles.ContainsKey(i_LicensePlate);
         }
-        public void setVehicleStatus(string i_LicensePlate, eVehicleStatus i_NewStatus)
+        public void SetVehicleStatus(string i_LicensePlate, eVehicleStatus i_NewStatus)
         {
             GarageVehicles[i_LicensePlate].CarStatus = i_NewStatus;
         }
+        public void ChargeVehicleInGarage(string i_LicensePlate, int i_ChargingTime)
+        {
 
+            GarageVehicles[i_LicensePlate].ChargeVehicle(i_ChargingTime);
+        }
+        public void FuelVehicleInGarage(string i_LicensePlate, int i_AmmountToAdd, eEnergyType i_EnergyType)
+        {
+
+            GarageVehicles[i_LicensePlate].FuelVehicle(i_AmmountToAdd, i_EnergyType);
+        }
     }
 }
